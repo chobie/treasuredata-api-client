@@ -1,0 +1,28 @@
+{
+    "name": "chobie/treasuredata-api-client",
+    "description": "TreasureData REST API client.",
+    "keywords": ["td","treasuredata","api"],
+    "type": "library",
+    "license": "Apache",
+    "authors": [
+        {
+            "name": "Shuhei Tanuma",
+            "homepage": "https://github.com/chobie/treasuredata-api-client",
+            "email": "chobieeee@php.net"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.2.4"
+    },
+    "autoload": {
+        "psr-0" : {
+            "TreasureData" : "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}
