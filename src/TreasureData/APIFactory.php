@@ -33,7 +33,7 @@ class TreasureData_APIFactory
                 throw new RuntimeException("stream socket must support ssl transport. please rebuild php");
             }
 
-            if (in_array('compress.zlib', stream_get_wrappers())) {
+            if (!in_array('compress.zlib', stream_get_wrappers())) {
                 throw new RuntimeException("StreamSocketDriver requires zlib wrapper support. please rebuild php");
             }
         }
