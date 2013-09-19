@@ -1,0 +1,13 @@
+{
+    "database": "db0",
+    "tables": [
+        {
+            "name": "access_log",
+            "count": 13123233
+        },
+        {
+            "name": "payment_log",
+            "count": 331232
+        }
+    ]
+}

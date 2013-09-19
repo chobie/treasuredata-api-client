@@ -7,18 +7,18 @@ class TreasureData_API_GetJobStatusTest extends PHPUnit_Framework_TestCase
         $api    = new TreasureData_API();
 
         $stub = $this->getMockForAbstractClass('TreasureData_API_Driver');
+        $fixture = file_get_contents(
+            TD_API_FIXTURE_PATH . join(DIRECTORY_SEPARATOR, array(
+                "api",
+                "job_status.json"
+        )));
+
         $stub->expects($this->any())
             ->method('request')
             ->will($this->returnValue(new TreasureData_API_Response(
                 new TreasureData_API_Request(),
-                new TreasureData_API_Stream_InputStream('{
-  "job_id":"860329",
-  "status":"success",
-  "created_at":"2012-09-17 21:00:00 UTC",
-  "start_at":"2012-09-17 21:00:01 UTC",
-  "end_at":"2012-09-17 21:00:52 UTC"
-}'
-                ))));
+                new TreasureData_API_Stream_InputStream($fixture)
+        )));
 
         $api->setDriver($stub);
         $result = $api->getJobStatus(860329);
