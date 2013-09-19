@@ -81,6 +81,13 @@ abstract class TreasureData_API_Message
         }
     }
 
+    /**
+     * property getter
+     *
+     * @param $name
+     * @return mixed
+     * @throws InvalidArgumentException
+     */
     public function get($name)
     {
         if ($this->has($name)) {
@@ -90,6 +97,12 @@ abstract class TreasureData_API_Message
         }
     }
 
+    /**
+     * check the property exists
+     *
+     * @param $name
+     * @return bool
+     */
     public function has($name)
     {
         if (property_exists($this, $name)) {
@@ -100,6 +113,12 @@ abstract class TreasureData_API_Message
 
     }
 
+    /**
+     * returns representation of an array
+     *
+     * @api
+     * @return array
+     */
     public function toArray()
     {
         $result = array();
