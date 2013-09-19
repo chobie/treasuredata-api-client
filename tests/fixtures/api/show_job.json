@@ -1,0 +1,13 @@
+{
+    "type": "hive",
+    "query": "SELECT * FROM ACCESS",
+    "job_id": "12345",
+    "status": "success",
+    "url": "http://console.treasure-data.com/jobs/12345",
+    "created_at":"Sun Jun 26 17:39:18 -0400 2011",
+    "updated_at":"Sun Jun 26 17:39:54 -0400 2011",
+    "debug": {
+        "stderr": "...",
+        "cmdout": "..."
+    }
+}
