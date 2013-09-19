@@ -73,7 +73,12 @@ class TreasureData_API_Driver_CurlDriver
         }
         $headers = array();
 
-        $response = new TreasureData_API_Response($request, new TreasureData_API_Stream_InputStream($result), $headers);
+
+        if ($request->getGzipHint()) {
+            $response = new TreasureData_API_Response($request, new TreasureData_API_Stream_GzipInputStream($this->socket), $headers);
+        } else {
+            $response = new TreasureData_API_Response($request, new TreasureData_API_Stream_InputStream($this->socket), $headers);
+        }
         return $response;
     }
 }

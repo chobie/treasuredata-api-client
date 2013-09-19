@@ -20,13 +20,24 @@ class TreasureData_API_Stream_GzipInputStream
     extends TreasureData_API_Stream_InputStream
 {
     /**
+     * GzipInput stream provides inflating gzip stream feature (RFC 1952).
+     *
+     * We don't have `real` stream implementation yet. for now, use gzinflate.
+     *
      * @param $datasource string or stream resource
      */
     public function __construct($datasource)
     {
-        parent::__construct($datasource);
+        $buffer = "";
+        if (is_resource($datasource)) {
+            while (!feof($datasource)) {
+                $buffer .= fread($datasource, 8192);
+            }
+        } else {
+            $buffer = $datasource;
+        }
 
-        /* Note: some environment (OSX) may crush zlib.inflate filter. */
-        stream_filter_append($this->datasource, "zlib.inflate", STREAM_FILTER_READ);
+        /** FIXME: gzdecode can't use under php 5.4. we use gzinflate atm */
+        parent::__construct(gzinflate(substr($buffer, 10, -8)));
     }
 }
