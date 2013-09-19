@@ -1,5 +1,8 @@
 # Treasure Data API Client
 
+[![Build Status](https://secure.travis-ci.org/chobie/treasuredata-api-client.png)](http://travis-ci.org/chobie/treasuredata-api-client)
+
+
 MOTIVATION
 --------------------------
 
