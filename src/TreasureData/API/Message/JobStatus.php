@@ -23,7 +23,7 @@
  * @method string getJobId()
  * @method string getStatus()
  * @method DateTime getCreatedAt()
- * @method DateTime getStartedAt()
+ * @method DateTime getStartAt()
  * @method DateTime getEndAt()
  */
 class TreasureData_API_Message_JobStatus extends TreasureData_API_Message
@@ -37,8 +37,8 @@ class TreasureData_API_Message_JobStatus extends TreasureData_API_Message
     /** @var  DateTime $created_at */
     protected $created_at;
 
-    /** @var  DateTime $started_at */
-    protected $started_at;
+    /** @var  DateTime $start_at */
+    protected $start_at;
 
     /** @var  DateTime $end_at */
     protected $end_at;
