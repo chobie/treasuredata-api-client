@@ -70,6 +70,7 @@ class TreasureData_API_RequestBuilderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("/v3/job/status/1", $request->getQueryString());
         $this->assertEquals("GET", $request->getRequestMethod());
         $this->assertEquals("https", $request->getScheme());
+        $this->assertEquals(sprintf("%s://%s%s", $result['scheme'], $result['host'], $query), $request->getUrl());
    }
 
 }

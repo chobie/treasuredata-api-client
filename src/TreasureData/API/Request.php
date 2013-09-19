@@ -18,6 +18,8 @@
  */
 class TreasureData_API_Request
 {
+    protected $url;
+
     protected $host;
 
     protected $addresses = array();
