@@ -13,7 +13,7 @@ $message = $api->issueHiveQuery("testdb", "select v['code'] as code, count(1) as
 /* @var TreasureData_API_Message_IssueHiveJob $message */
 
 $message->getJobId();
-echo sprintf("# Issuing job_id %s successful\n", $message->getJobId());
+printf("# Issuing job_id %s successful\n", $message->getJobId());
 
 echo "# polling job status. this will 30 over seconds...\n";
 while (true){
