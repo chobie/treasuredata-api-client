@@ -30,7 +30,7 @@ class TreasureData_API_RequestBuilder
 
     protected $version = '1.0';
 
-    protected $api_version;
+    protected $api_version = TreasureData_API::DEFAULT_API_VERSION;
 
     protected $authentication;
 
