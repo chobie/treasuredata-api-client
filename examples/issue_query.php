@@ -21,10 +21,10 @@ while (true){
 
     $st = $api->getJobStatus($message->getJobId())->getResult();
     /* @var TreasureData_API_Message_JobStatus $status */
-    if ($st->getStatus() == "success") {
+    if ($st->isSuccess()) {
         $result = $api->getJobResult($message->getJobId())->getResult();
         break;
-    } else if ($st->getStatus() == "error") {
+    } else if ($st->isError()) {
         throw new RuntimeException(sprintf("job_id %s returns error", $message->getJobId()));
     } else {
         echo ".";

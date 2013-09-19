@@ -42,4 +42,66 @@ class TreasureData_API_Message_JobStatus extends TreasureData_API_Message
 
     /** @var  DateTime $end_at */
     protected $end_at;
+
+    /**
+     * returns true when status is success
+     *
+     * @return bool
+     */
+    public function isSuccess()
+    {
+        return $this->getStatusImpl("success");
+    }
+
+    /**
+     * returns true when status is running
+     *
+     * @return bool
+     */
+    public function isRunning()
+    {
+        return $this->getStatusImpl("running");
+    }
+
+    /**
+     * returns true when status is error
+     *
+     * @return bool
+     */
+    public function isError()
+    {
+        return $this->getStatusImpl("error");
+    }
+
+    /**
+     * returns true when status is queued
+     *
+     * @return bool
+     */
+    public function isQueued()
+    {
+        return $this->getStatusImpl("queued");
+    }
+
+    /**
+     * returns true when status is booting
+     *
+     * @return bool
+     */
+    public function isBooting()
+    {
+        return $this->getStatusImpl("booting");
+    }
+
+    private function getStatusImpl($name)
+    {
+        $retval = false;
+
+        if ($this->getStatus() == $name) {
+            $retval = true;
+        }
+
+        return $retval;
+
+    }
 }
