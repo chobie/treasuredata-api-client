@@ -132,7 +132,7 @@ class TreasureData_API_RequestBuilder
 
         $result['params'] = $this->getParams();
         if ($this->getAuthentication()) {
-            $result['header']['Authorization'] = $this->getAuthentication()->getAsString();
+            $result['headers']['Authorization'] = $this->getAuthentication()->getAsString();
         }
 
         if ($this->getUserAgent()) {
@@ -144,8 +144,8 @@ class TreasureData_API_RequestBuilder
 
             $query = '/' . $this->getApiVersion() . '/' . ltrim($this->getQuery(), "/");
             $result['query_string'] = $query;
-            $result['header']['Content-Type'] = "application/x-www-form-urlencoded";
-            $result['header']['Content-Length'] = strlen($data);
+            $result['headers']['Content-Type'] = "application/x-www-form-urlencoded";
+            $result['headers']['Content-Length'] = strlen($data);
             $result['content_body'] = $data;
         } else {
             if ($this->hasParams()) {
