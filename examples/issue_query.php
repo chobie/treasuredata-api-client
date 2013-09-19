@@ -12,12 +12,11 @@ $message = $api->issueHiveQuery("testdb", "select v['code'] as code, count(1) as
 
 /* @var TreasureData_API_Message_IssueHiveJob $message */
 
-$message->getJobId();
 printf("# Issuing job_id %s successful\n", $message->getJobId());
+printf("# polling job status. this will 30 over seconds...\n");
 
-echo "# polling job status. this will 30 over seconds...\n";
 while (true){
-    echo "# Issuing job status api\n";
+    printf("# Issuing job status api. we wait 10 seconds after issuing api.\n");
 
     $st = $api->getJobStatus($message->getJobId())->getResult();
     /* @var TreasureData_API_Message_JobStatus $status */
@@ -27,7 +26,7 @@ while (true){
     } else if ($st->isError()) {
         throw new RuntimeException(sprintf("job_id %s returns error", $message->getJobId()));
     } else {
-        echo ".";
+        printf(".");
         var_dump($st);
         sleep(10);
     }
