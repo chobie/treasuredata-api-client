@@ -33,7 +33,7 @@ class TreasureData_API_Stream_InputStream
 
         $this->datasource = $datasource;
 
-        if (!is_resource($datasource)) {
+        if (!is_resource($this->datasource)) {
             throw new InvalidArgumentException("passed argument is not resource");
         }
     }
