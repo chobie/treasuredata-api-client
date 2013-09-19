@@ -37,6 +37,21 @@ $result = $api->getDatabaseList();
 var_dump($result->getResult());
 ````
 
+KEEP IN MIND
+-------------------------
+
+Unfortunately, PHP is really poor about processing BIG Data as some reasons.
+
+* PHP function is very slow. (enough to process web services. but big data requires really many function call)
+* array implementation (HashTable) does not scale. php will re-alloc memories and iterating Big HashTable is really slow.
+* PHP curl implementation returns result as string directly. this will take big memory if job result is large.
+
+  * So, This lib use StreamSocketDriver as default driver. you can also use CurlDriver. but I don't recommend it as above problem.
+
+So. I strongly recommend You process small result (at most under 1 million records) with this lib or downloading job result only.
+
+Anyway, have fun with Treasure Data API and PHP!
+
 LICENSE
 --------------------------
 

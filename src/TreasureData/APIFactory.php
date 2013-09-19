@@ -24,18 +24,8 @@ class TreasureData_APIFactory
      */
     public static function createClient($config = array())
     {
-        if (extension_loaded("curl")) {
-            $default_driver = "TreasureData_API_Driver_CurlDriver";
-        } else {
-            $default_driver = "TreasureData_API_Driver_StreamSocketDriver";
-
-            if (!in_array("ssl", stream_get_transports())) {
-                throw new RuntimeException("stream socket must support ssl transport. please rebuild php");
-            }
-
-            if (!in_array('compress.zlib', stream_get_wrappers())) {
-                throw new RuntimeException("StreamSocketDriver requires zlib wrapper support. please rebuild php");
-            }
+        if (!in_array("ssl", stream_get_transports())) {
+            throw new RuntimeException("stream socket must support ssl transport. please rebuild php");
         }
 
         $default_config = array(
@@ -43,13 +33,12 @@ class TreasureData_APIFactory
             "authentication" => "TreasureData_API_Authentication_Header",
             "api_key"        => "",
             "api_version"    => TreasureData_API::DEFAULT_API_VERSION,
-            "driver"         => "TreasureData_API_Driver_CurlDriver",
+            "driver"         => "TreasureData_API_Driver_StreamSocketDriver",
             "driver_option" => array(
             )
         );
 
         $config = array_merge($default_config, $config);
-
         if ($config['driver'] == "TreasureData_API_Driver_CurlDriver") {
             if (!extension_loaded("curl")) {
                 throw new RuntimeException("your php does not support curl. please rebuild php");
