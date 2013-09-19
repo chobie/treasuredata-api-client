@@ -40,8 +40,13 @@ class TreasureData_API_Request
 
     protected $params = array();
 
-    public function __construct()
+    public function __construct($values = array())
     {
+        foreach ($values as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
     }
 
     public function getUrl()
@@ -49,24 +54,9 @@ class TreasureData_API_Request
         return $this->url;
     }
 
-    public function setUrl($url)
-    {
-        return $this->url = $url;
-    }
-
-    public function setParams($params)
-    {
-        $this->params = $params;
-    }
-
     public function getParams()
     {
         return $this->params;
-    }
-
-    public function setGzipHint($hint)
-    {
-        $this->gzip_hint = $hint;
     }
 
     public function getGzipHint()
@@ -143,41 +133,14 @@ class TreasureData_API_Request
         $this->request_method = $request_method;
     }
 
-    public function setContentBody($body)
-    {
-        $this->content_body = $body;
-    }
-
-
     public function getRequestMethod()
     {
         return $this->request_method;
     }
 
-
     public function addHeader($key, $value)
     {
         $this->headers[$key] = $value;
-    }
-
-    public function setScheme($scheme)
-    {
-        $this->scheme = $scheme;
-    }
-
-    public function setHost($host)
-    {
-        $this->host = $host;
-    }
-
-    public function addAddress($address)
-    {
-        $this->addresses[] = $address;
-    }
-
-    public function setPort($port)
-    {
-        $this->port = $port;
     }
 
     public function getHost()

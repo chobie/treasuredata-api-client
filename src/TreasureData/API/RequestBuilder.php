@@ -101,17 +101,20 @@ class TreasureData_API_RequestBuilder
      */
     public function build()
     {
-        $request = new TreasureData_API_Request();
-        $request->setRequestMethod($this->getRequestMethod());
+        $result = array(
+            "scheme" => "https",
+            "port" => 443,
+        );
+        $result['request_method'] = $this->getRequestMethod();
 
         $info    = parse_url($this->getEndPoint());
 
         if (isset($info['scheme'])) {
-            $request->setScheme($info['scheme']);
+            $result['scheme'] = $info['scheme'];
         }
 
         if (isset($info['host'])) {
-            $request->setHost($info['host']);
+            $result['host'] = $info['host'];
 
             //$address = gethostbyname($info['host']);
             //$request->addAddress($address);
@@ -120,17 +123,16 @@ class TreasureData_API_RequestBuilder
         }
 
         if (isset($info['port'])) {
-            $request->setPort($info['port']);
+            $result['port'] = $info['port'];
         } else {
-            if ($request->getScheme() == 'http') {
-                $request->setPort(80);
+            if ($result['scheme'] == 'http') {
+                $result['port'] = 80;
             }
         }
 
-        $request->setParams($this->getParams());
-
+        $result['params'] = $this->getParams();
         if ($this->getAuthentication()) {
-            $request->addHeader("Authorization", $this->getAuthentication()->getAsString());
+            $result['header']['Authorization'] = $this->getAuthentication()->getAsString();
         }
 
         if ($this->getUserAgent()) {
@@ -141,10 +143,10 @@ class TreasureData_API_RequestBuilder
             $data = http_build_query($this->getParams());
 
             $query = '/' . $this->getApiVersion() . '/' . ltrim($this->getQuery(), "/");
-            $request->setQueryString($query);
-            $request->addHeader("Content-Type", "application/x-www-form-urlencoded");
-            $request->addHeader("Content-Length", strlen($data));
-            $request->setContentBody($data);
+            $result['query_string'] = $query;
+            $result['header']['Content-Type'] = "application/x-www-form-urlencoded";
+            $result['header']['Content-Length'] = strlen($data);
+            $result['content_body'] = $data;
         } else {
             if ($this->hasParams()) {
                 $query = '/' . $this->getApiVersion() . '/' . ltrim($this->getQuery(), "/") . '?' . http_build_query($this->getParams());
@@ -152,12 +154,13 @@ class TreasureData_API_RequestBuilder
                 $query = '/' . $this->getApiVersion() . '/' . ltrim($this->getQuery(), "/");
             }
 
-            $request->setQueryString($query);
+            $result['query_string'] = $query;
         }
 
-        $request->setUrl(sprintf("%s://%s%s", $request->getScheme(), $request->getHost(), $query));
-        $request->setGzipHint($this->getGzipHint());
+        $result['url'] = sprintf("%s://%s%s", $result['scheme'], $result['host'], $query);
+        $result['gzip_hint'] = $this->getGzipHint();
 
+        $request = new TreasureData_API_Request($result);
         return $request;
     }
 
