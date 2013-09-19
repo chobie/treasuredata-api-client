@@ -15,7 +15,7 @@ $message = $api->issueHiveQuery("testdb", "select v['code'] as code, count(1) as
 printf("# Issuing job_id %s successful\n", $message->getJobId());
 printf("# polling job status. this will 30 over seconds...\n");
 
-while (true){
+while (true) {
     printf("# Issuing job status api. we wait 10 seconds after issuing api.\n");
 
     $st = $api->getJobStatus($message->getJobId())->getResult();
