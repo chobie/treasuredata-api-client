@@ -58,7 +58,7 @@ class TreasureData_Autoloader
         $retval = false;
 
         if (strpos($name,self::NAME_SPACE) === 0) {
-            $parts = explode("_",$name);
+            $parts = explode("_", $name);
             array_shift($parts);
 
             $expected_path = join(DIRECTORY_SEPARATOR, array(
