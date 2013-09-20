@@ -22,6 +22,12 @@ class TreasureData_API_ConfigResolver_HomeConfigResolver
     public function resolve()
     {
         $home_path = getenv("HOME");
-        return join(DIRECTORY_SEPARATOR, array($home_path, ".td", "td.conf"));
+        $path = join(DIRECTORY_SEPARATOR, array($home_path, ".td", "td.conf"));
+
+        if (file_exists($path) && is_readable($path)) {
+            return $path;
+        } else {
+            throw new RuntimeException("td.conf does not find.");
+        }
     }
 }

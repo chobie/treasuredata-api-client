@@ -22,6 +22,7 @@ class TreasureData_API_Config
 
     public function __construct($array)
     {
+        $this->validate($array);
         $this->result = $array;
     }
 
@@ -33,4 +34,10 @@ class TreasureData_API_Config
         return $this->result['account']['apikey'];
     }
 
+    private function validate($array)
+    {
+        if (!isset($array['account']['apikey'])) {
+            throw new InvalidArgumentException("the key `account.apikey` is missing.");
+        }
+    }
 }
