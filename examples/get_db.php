@@ -4,8 +4,17 @@ date_default_timezone_set("UTC");
 TreasureData_Autoloader::register();
 
 $api = TreasureData_APIFactory::createClient(array(
-    "api_key" => "<PUT YOUR API KEY HERE(see ~/.td/td.conf)>",
+    "api_key" => new TreasureData_API_ConfigResolver_HomeConfigResolver(),
 ));
 
-$result = $api->getDatabaseList();
-var_dump($result->getResult());
+printf("# Issuing getDatabaseList API\n");
+$databases = $api->getDatabaseList()->getResult();
+foreach ($databases->getDatabases() as $value) {
+    /** @var TreasureData_API_Message_Database $value */
+    printf("# %s\t%s\t%s\t%s\n",
+        $value->getName(),
+        $value->getCount(),
+        $value->getCreatedAt()->format("Y-m-d H:i:s"),
+        $value->getUpdatedAt()->format("Y-m-d H:i:s")
+    );
+}
