@@ -36,18 +36,25 @@ class TreasureData_API_Authentication_Header
 
     public function getApiKey()
     {
-        return $this->api_key;
+        if ($this->api_key instanceof TreasureData_API_ConfigResolver) {
+            return TreasureData_API_ConfigLoader::load($this->api_key->resolve());
+        } else {
+            return $this->api_key;
+        }
     }
 
     public function getAsString()
     {
-        return "TD1 " . $this->api_key;
+        return "TD1 " . (string)$this->getApiKey();
     }
 
     protected function checkApiKey($api_key)
     {
         if (empty($api_key)) {
             throw new InvalidArgumentException("at least requires api key");
+        }
+        if ($api_key instanceof TreasureData_API_ConfigResolver) {
+            return;
         }
         if (!is_string($api_key)) {
             throw new InvalidArgumentException("api key have to be a string");
