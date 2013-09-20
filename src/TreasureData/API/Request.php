@@ -140,11 +140,6 @@ class TreasureData_API_Request
         return $this->request_method;
     }
 
-    public function addHeader($key, $value)
-    {
-        $this->headers[$key] = $value;
-    }
-
     public function getHost()
     {
         return $this->host;
