@@ -29,9 +29,7 @@ Example
 <?php
 require dirname(__DIR__) . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . "autoload.php";
 
-$api = TreasureData_APIFactory::createClient(array(
-    "api_key" => "<PUT YOUR API KEY HERE(see ~/.td/td.conf)>",
-));
+$api = TreasureData_APIFactory::createClient();
 
 $result = $api->getDatabaseList();
 var_dump($result->getResult());
