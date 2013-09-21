@@ -3,9 +3,7 @@ require_once join(DIRECTORY_SEPARATOR, array(dirname(dirname(__FILE__)), "src", 
 date_default_timezone_set("UTC");
 TreasureData_Autoloader::register();
 
-$api = TreasureData_APIFactory::createClient(array(
-    "api_key" => new TreasureData_API_ConfigResolver_HomeConfigResolver(),
-));
+$api = TreasureData_APIFactory::createClient();
 
 printf("# Issuing getDatabaseList API\n");
 $databases = $api->getDatabaseList()->getResult();
