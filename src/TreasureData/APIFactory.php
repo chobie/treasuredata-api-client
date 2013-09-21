@@ -27,11 +27,11 @@ class TreasureData_APIFactory
         if (!in_array("ssl", stream_get_transports())) {
             throw new RuntimeException("stream socket must support ssl transport. please rebuild php");
         }
-
         $default_config = array(
+
             "endpoint"       => TreasureData_API::DEFAULT_ENDPOINT,
             "authentication" => "TreasureData_API_Authentication_Header",
-            "api_key"        => "",
+            "api_key"        => new TreasureData_API_ConfigResolver_HomeConfigResolver(),
             "api_version"    => TreasureData_API::DEFAULT_API_VERSION,
             "driver"         => "TreasureData_API_Driver_StreamSocketDriver",
             "driver_option" => array(

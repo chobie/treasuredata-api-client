@@ -28,4 +28,13 @@ class TreasureData_API_Unpacker_JsonUnpacker
 
         return $result;
     }
+
+    public function unpack2(TreasureData_API_Stream_InputStream $stream, $callback)
+    {
+        while ($buffer = $stream->readLine()) {
+            $result = json_decode($buffer, true);
+            call_user_func_array($callback, array($result));
+        }
+    }
+
 }

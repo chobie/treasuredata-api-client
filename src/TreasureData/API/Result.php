@@ -84,7 +84,7 @@ class TreasureData_API_Result
         return $this->use_packer;
     }
 
-    public function getResult()
+    public function getResult($callback = null)
     {
         if (!$this->processed) {
             $this->processed = true;
@@ -92,8 +92,13 @@ class TreasureData_API_Result
             if ($this->isUsePacker()) {
                 $stream   = $this->getResponse()->getInputStream();
                 $unpacker = $this->getPackerForType($this->getPackerType());
-                $result = $unpacker->unpack($stream);
 
+                if (is_callable($callback)) {
+                    $unpacker->unpack2($stream, $callback);
+                    $result = true;
+                } else {
+                    $result = $unpacker->unpack($stream);
+                }
             } else {
                 $message = $this->getResponse()->getInputStream()->getAll();
                 $array   = json_decode($message, true);

@@ -18,5 +18,16 @@
  */
 interface TreasureData_API_Unpacker
 {
+    /**
+     * @param TreasureData_API_Stream_InputStream $stream
+     * @return mixed
+     */
     public function unpack(TreasureData_API_Stream_InputStream $stream);
+
+    /**
+     * @param TreasureData_API_Stream_InputStream $stream
+     * @param                                     $callback
+     * @return void
+     */
+    public function unpack2(TreasureData_API_Stream_InputStream $stream, $callback);
 }

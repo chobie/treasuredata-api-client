@@ -21,7 +21,60 @@ class TreasureData_API_Unpacker_MessagePackUnpacker
 {
     public function unpack(TreasureData_API_Stream_InputStream $stream)
     {
-        $buffer = $stream->getAll();
-        return msgpack_unpack($buffer);
+        return $this->unpackImpl($stream);
+    }
+
+    public function unpack2(TreasureData_API_Stream_InputStream $stream, $callback)
+    {
+        if (!is_callable($callback)) {
+            throw new InvalidArgumentException("callback have to be callable object or callable array");
+        }
+
+        return $this->unpackImpl($stream, $callback);
+    }
+
+    protected function unpackImpl(TreasureData_API_Stream_InputStream $stream, $callback = null)
+    {
+        $unpacker = new MessagePackUnpacker();
+
+        $result = array();
+        $offset = 0;
+        $flag = true;
+        $call = false;
+
+        if (is_callable($callback)) {
+            $call = true;
+            $result = true;
+        }
+
+        while (true) {
+            if ($flag) {
+                $buffer = $stream->read();
+                $flag = false;
+            }
+
+            if (empty($buffer)) {
+                break;
+            }
+
+            if ($unpacker->execute($buffer, $offset)) {
+                if ($call) {
+                    call_user_func_array($callback, array($unpacker->data()));
+                } else {
+                    $result[] = $unpacker->data();
+                }
+
+                $unpacker->reset();
+                $buffer = substr($buffer, $offset);
+                $offset = 0;
+
+                if (empty($buffer)) {
+                    $flag = true;
+                    continue;
+                }
+            }
+        }
+
+        return $result;
     }
 }

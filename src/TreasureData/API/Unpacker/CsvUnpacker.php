@@ -38,4 +38,9 @@ class TreasureData_API_Unpacker_CsvUnpacker
 
         return $result;
     }
+
+    public function unpack2(TreasureData_API_Stream_InputStream $stream, $callback)
+    {
+        throw new Exception("not implemented yet");
+    }
 }
