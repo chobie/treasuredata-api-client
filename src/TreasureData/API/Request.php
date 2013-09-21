@@ -18,29 +18,40 @@
  */
 class TreasureData_API_Request
 {
+    /** @var  string $url */
     protected $url;
 
+    /** @var  string $host */
     protected $host;
 
-    protected $addresses = array();
-
+    /** @var int $port */
     protected $port = 443;
 
+    /** @var string $scheme */
     protected $scheme = 'https';
 
+    /** @var string $http_version */
     protected $http_version = '1.0';
 
+    /** @var string $request_method */
     protected $request_method = "GET";
 
+    /** @var array $headers */
     protected $headers = array();
 
+    /** @var  string $content_body */
     protected $content_body;
 
+    /** @var string $query_string */
     protected $query_string = '/';
 
     protected $gzip_hint = false;
 
+    /** @var array $params */
     protected $params = array();
+
+    /** @var  string $user_agent */
+    protected $user_agent;
 
     public function __construct($values = array())
     {
@@ -51,11 +62,21 @@ class TreasureData_API_Request
         }
     }
 
+    /**
+     * get full url
+     *
+     * @return string
+     */
     public function getUrl()
     {
         return $this->url;
     }
 
+    /**
+     * get query parameters
+     *
+     * @return array
+     */
     public function getParams()
     {
         return $this->params;
@@ -66,31 +87,51 @@ class TreasureData_API_Request
         return $this->gzip_hint;
     }
 
+    /**
+     * get protocol scheme
+     *
+     * @return string
+     */
     public function getScheme()
     {
         return $this->scheme;
     }
 
-    public function setQueryString($query_string)
-    {
-        $this->query_string = $query_string;
-    }
-
+    /**
+     * get user agent
+     *
+     * @return string
+     */
     public function getUserAgent()
     {
-        return "";
+        return $this->user_agent;
     }
 
+    /**
+     * get headers
+     *
+     * @return array
+     */
     public function getHeaders()
     {
         return $this->headers;
     }
 
+    /**
+     * get http version
+     *
+     * @return string
+     */
     public function getHttpVersion()
     {
         return $this->http_version;
     }
 
+    /**
+     * get http request message
+     *
+     * @return string
+     */
     public function getRequestAsString()
     {
         $buffer = array();
@@ -98,6 +139,9 @@ class TreasureData_API_Request
         $buffer[] = sprintf("Host: %s", $this->getHost());
         foreach ($this->getHeaders() as $key => $value) {
             $buffer[] = sprintf("%s: %s", $key, $value);
+        }
+        if ($this->getHttpVersion() == "1.1") {
+            $buffer[] = "Connection: close";
         }
         $buffer[] = null;
 
@@ -111,11 +155,21 @@ class TreasureData_API_Request
         return $result;
     }
 
+    /**
+     * get content body
+     *
+     * @return string
+     */
     public function getContentBody()
     {
         return $this->content_body;
     }
 
+    /**
+     * check request method is post.
+     *
+     * @return bool
+     */
     public function isPost()
     {
         if ($this->getRequestMethod() == 'POST') {
@@ -125,26 +179,41 @@ class TreasureData_API_Request
         }
     }
 
+    /**
+     * get query string
+     *
+     * @return string
+     */
     public function getQueryString()
     {
         return $this->query_string;
     }
 
-    public function setRequestMethod($request_method)
-    {
-        $this->request_method = $request_method;
-    }
-
+    /**
+     * get request method
+     *
+     * @return string
+     */
     public function getRequestMethod()
     {
         return $this->request_method;
     }
 
+    /**
+     * get host (FQDN)
+     *
+     * @return string
+     */
     public function getHost()
     {
         return $this->host;
     }
 
+    /**
+     * get port
+     *
+     * @return int
+     */
     public function getPort()
     {
         return $this->port;
