@@ -134,8 +134,8 @@ abstract class TreasureData_API_Message
                         if ($val instanceof TreasureData_API_Message) {
                             $result[$property->getName()][$offset] = $val->toArray();
                         } else if ($val instanceof DateTime) {
-                            /* NB: php5.2 doesn't support getTimeStamp method */
-                            $result[$property->getName()][$offset] = $val->format("u");
+                            /* NB: php5.2 doesn't support getTimestamp method */
+                            $result[$property->getName()][$offset] = $val->format("U");
                         } else {
                             $result[$property->getName()][$offset] = (string)$val;
                         }
@@ -148,8 +148,8 @@ abstract class TreasureData_API_Message
                     if ($tmp instanceof TreasureData_API_Message) {
                         $result[$property->getName()] = $tmp->toArray();
                     } else if ($tmp instanceof DateTime) {
-                        /* NB: php5.2 doesn't support getTimeStamp method */
-                        $result[$property->getName()] = $tmp->format("u");
+                        /* NB: php5.2 doesn't support getTimestamp method */
+                        $result[$property->getName()] = $tmp->format("U");
                     } else {
                         $result[$property->getName()] = (string)$tmp;
                     }
