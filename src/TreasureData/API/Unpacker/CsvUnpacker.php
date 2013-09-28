@@ -21,6 +21,16 @@ class TreasureData_API_Unpacker_CsvUnpacker
 {
     public function unpack(TreasureData_API_Stream_InputStream $stream)
     {
+        return $this->unpackImpl($stream);
+    }
+
+    public function unpack2(TreasureData_API_Stream_InputStream $stream, $callback)
+    {
+        $this->unpackImpl($stream, $callback);
+    }
+
+    protected function unpackImpl(TreasureData_API_Stream_InputStream $stream, $callable = null)
+    {
         $result = array();
 
         while ($line = $stream->readLine()) {
@@ -34,14 +44,14 @@ class TreasureData_API_Unpacker_CsvUnpacker
             foreach ($args as $arg) {
                 $tmp[] = trim($arg);
             }
-            $result[] = $tmp;
+
+            if ($callable) {
+                call_user_func_array($callable, array($tmp));
+            } else {
+                $result[] = $tmp;
+            }
         }
 
         return $result;
-    }
-
-    public function unpack2(TreasureData_API_Stream_InputStream $stream, $callback)
-    {
-        throw new Exception("not implemented yet");
     }
 }

@@ -21,6 +21,20 @@ class TreasureData_API_Unpacker_TsvUnpacker
 {
     public function unpack(TreasureData_API_Stream_InputStream $stream)
     {
+        return $this->unpackImpl($stream);
+    }
+
+    public function unpack2(TreasureData_API_Stream_InputStream $stream, $callback)
+    {
+        if (!is_callable($callback)) {
+            throw new InvalidArgumentException("passed argument is not callable");
+        }
+
+        $this->unpackImpl($stream, $callback);
+    }
+
+    protected function unpackImpl(TreasureData_API_Stream_InputStream $stream, $callable = null)
+    {
         $result = array();
         while ($line = $stream->readLine()) {
             $line = trim($line);
@@ -28,14 +42,14 @@ class TreasureData_API_Unpacker_TsvUnpacker
                 continue;
             }
 
-            $result[] = explode("\t", $line);
+            $columns = explode("\t", $line);
+            if ($callable) {
+                call_user_func_array($callable, array($columns));
+            } else {
+                $result[] = $columns;
+            }
         }
 
         return $result;
-    }
-
-    public function unpack2(TreasureData_API_Stream_InputStream $stream, $callback)
-    {
-        throw new Exception("not implemented yet");
     }
 }
