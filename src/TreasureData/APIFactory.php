@@ -44,7 +44,11 @@ class TreasureData_APIFactory
             if (!in_array("ssl", stream_get_transports())) {
                 throw new RuntimeException("stream socket must support ssl transport. please rebuild php");
             }
+            if (ini_get("allow_url_fopen") == false) {
+                throw new RuntimeException("stream socket requires `allow_url_fopen`. please check your php.ini");
+            }
         }
+
         if (!empty($config['proxy'])) {
             $info = parse_url($config['proxy']);
             switch($info['scheme']) {
