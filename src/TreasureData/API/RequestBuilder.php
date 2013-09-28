@@ -36,6 +36,8 @@ class TreasureData_API_RequestBuilder
 
     protected $user_agent;
 
+    protected $proxy;
+
     public function __construct()
     {
     }
@@ -159,6 +161,7 @@ class TreasureData_API_RequestBuilder
 
         $result['url'] = sprintf("%s://%s%s", $result['scheme'], $result['host'], $query);
         $result['gzip_hint'] = $this->getGzipHint();
+        $result['proxy'] = $this->getProxy();
 
         $request = new TreasureData_API_Request($result);
         return $request;
@@ -202,5 +205,15 @@ class TreasureData_API_RequestBuilder
     public function setGzipHint($gzip_hint)
     {
         $this->gzip_hint = $gzip_hint;
+    }
+
+    public function setProxy($proxy)
+    {
+        $this->proxy = $proxy;
+    }
+
+    public function getProxy()
+    {
+        return $this->proxy;
     }
 }

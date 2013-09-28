@@ -48,16 +48,21 @@ abstract class TreasureData_API_Core
     /** @var string api version */
     protected $api_version = self::DEFAULT_API_VERSION;
 
+    /** @var  string $proxy_address */
+    protected $proxy;
+
     /**
      * @param string                          $endpoint
      * @param TreasureData_API_Driver         $driver
      * @param TreasureData_API_Authentication $authentication
      * @param TreasureData_API_Unpacker         $packer
+     * @param string                          $proxy
      */
     public function __construct($endpoint = self::DEFAULT_ENDPOINT,
                                 TreasureData_API_Driver $driver = null,
                                 TreasureData_API_Authentication $authentication = null,
-                                $api_version = self::DEFAULT_API_VERSION
+                                $api_version = self::DEFAULT_API_VERSION,
+                                $proxy = null
     )
     {
         $this->endpoint = $endpoint;
@@ -79,6 +84,7 @@ abstract class TreasureData_API_Core
         }
 
         $this->api_version = $api_version;
+        $this->proxy = $proxy;
     }
 
     /**
@@ -148,6 +154,7 @@ abstract class TreasureData_API_Core
         $builder->setQuery($query);
         $builder->setParams($params);
         $builder->setAuthentication($this->getAuthentication());
+        $builder->setProxy($this->proxy);
 
         if ($gziped) {
             $builder->setGzipHint(true);

@@ -24,15 +24,12 @@ class TreasureData_APIFactory
      */
     public static function createClient($config = array())
     {
-        if (!in_array("ssl", stream_get_transports())) {
-            throw new RuntimeException("stream socket must support ssl transport. please rebuild php");
-        }
         $default_config = array(
-
             "endpoint"       => TreasureData_API::DEFAULT_ENDPOINT,
             "authentication" => "TreasureData_API_Authentication_Header",
             "api_key"        => new TreasureData_API_ConfigResolver_HomeConfigResolver(),
             "api_version"    => TreasureData_API::DEFAULT_API_VERSION,
+            "proxy"          => getenv("HTTP_PROXY"),
             "driver"         => "TreasureData_API_Driver_StreamSocketDriver",
             "driver_option" => array(
             )
@@ -43,17 +40,35 @@ class TreasureData_APIFactory
             if (!extension_loaded("curl")) {
                 throw new RuntimeException("your php does not support curl. please rebuild php");
             }
+        } else if ($config['driver'] == "TreasureData_API_Driver_StreamSocketDriver") {
+            if (!in_array("ssl", stream_get_transports())) {
+                throw new RuntimeException("stream socket must support ssl transport. please rebuild php");
+            }
+        }
+        if (!empty($config['proxy'])) {
+            $info = parse_url($config['proxy']);
+            switch($info['scheme']) {
+            case "http":
+                $proto = 'tcp';
+                break;
+            case 'https':
+                $proto = "ssl";
+                break;
+            default:
+                $proto = 'tcp';
+            }
+
+            $config['proxy'] = sprintf("%s://%s:%d", $proto, $info['host'], $info['port']);
         }
 
         $authentication_class = $config['authentication'];
         $authentication = new $authentication_class($config['api_key']);
 
         $driver_class = $config['driver'];
-
         $driver = new $driver_class();
         $driver->setupOption($config['driver_option']);
 
-        $api = new TreasureData_API($config['endpoint'], $driver, $authentication, $config['api_version']);
+        $api = new TreasureData_API($config['endpoint'], $driver, $authentication, $config['api_version'], $config['proxy']);
         return $api;
     }
 }

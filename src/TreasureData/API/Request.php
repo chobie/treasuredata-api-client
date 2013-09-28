@@ -53,6 +53,9 @@ class TreasureData_API_Request
     /** @var  string $user_agent */
     protected $user_agent;
 
+    /** @var  string $proxy */
+    protected $proxy;
+
     public function __construct($values = array())
     {
         foreach ($values as $key => $value) {
@@ -115,6 +118,16 @@ class TreasureData_API_Request
     public function getHeaders()
     {
         return $this->headers;
+    }
+
+    public function getHeadersAsString()
+    {
+        $buffer = array();
+        foreach ($this->getHeaders() as $key => $value) {
+            $buffer[] = sprintf("%s: %s", $key, $value);
+        }
+
+        return $buffer;
     }
 
     /**
@@ -217,6 +230,16 @@ class TreasureData_API_Request
     public function getPort()
     {
         return $this->port;
+    }
+
+    public function getProxy()
+    {
+        return $this->proxy;
+    }
+
+    public function hasProxy()
+    {
+        return !empty($this->proxy);
     }
 }
 

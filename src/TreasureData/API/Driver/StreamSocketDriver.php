@@ -55,75 +55,45 @@ class TreasureData_API_Driver_StreamSocketDriver
 
     public function request(TreasureData_API_Request $request)
     {
-        $socket  = $this->connect($request);
-        $headers = array();
+        $context = stream_context_create(array(
+            'http' => array(
+                'method'          => $request->getRequestMethod(),
+                'header'          => $request->getHeadersAsString(),
+                'proxy'           => $request->getProxy(),
+                'content'         => $request->getContentBody(),
+                'request_fulluri' => $request->hasProxy(),
+            ),
+        ));
 
+        /* Note: stream_socket_client does not support http(s) protocol. we have to use fopen here. */
+        $socket  = fopen($request->getUrl(), 'r', false, $context);
         if (!is_resource($socket)) {
             throw new Exception("can't create stream socket.");
         }
 
+        $headers      = array();
         $this->socket = $socket;
-        $message = $request->getRequestAsString();
-
-
-        $this->write($message);
-        $flag = true;
-        while ($flag) {
-            $tmp = fgets($this->socket, 8192);
-            if (trim($tmp) == "") {
-                $flag = false;
-                break;
-            }
-
-            if (strpos($tmp, "HTTP") === 0) {
-                list($dummy, $status, $http_message) = explode(" ", $tmp, 3);
-                $headers['HTTP_STATUS'] = $status;
-            } else {
-                /* Note: don't care about 2 lines at this time. */
-                list($key, $value) = explode(":", $tmp, 2);
-
-                $headers[$key] = $value;
+        $meta_data    = stream_get_meta_data($socket);
+        if (isset($meta_data['wrapper_data'])) {
+            foreach ($meta_data['wrapper_data'] as $value) {
+                if (strpos($value, "HTTP/") === 0) {
+                    list($dummy, $status, $dummy) = explode(" ", $value, 3);
+                    $headers['HTTP_STATUS'] = $status;
+                } else {
+                    list($key, $value) = explode(":", $value, 2);
+                    $headers[$key] = $value;
+                }
             }
         }
 
-        if ($headers['HTTP_STATUS'] == 404) {
-            throw new TreasureData_API_Exception_HTTPException("API Server returns 404 not found");
-        }
+        $stream   = new TreasureData_API_Stream_InputStream($this->socket);
+        $response = new TreasureData_API_Response($request, $stream, $headers);
 
-        $response = new TreasureData_API_Response($request, new TreasureData_API_Stream_InputStream($this->socket), $headers);
         return $response;
-    }
-
-    protected function write($message)
-    {
-        fwrite($this->socket, $message);
     }
 
     protected function close($socket)
     {
         fclose($socket);
-    }
-
-    protected function connect(TreasureData_API_Request $request)
-    {
-        if (!is_null($this->socket)) {
-            $this->close($this->socket);
-        }
-
-        $protocol = 'tcp';
-        if ($request->getScheme() == 'https') {
-            $protocol = 'ssl';
-        }
-
-        $proto = sprintf("%s://%s:%d", $protocol, $request->getHost(), $request->getPort());
-        $socket = stream_socket_client($proto,
-            $err,
-            $errstr,
-            60,
-            STREAM_CLIENT_CONNECT,
-            $this->context
-        );
-
-        return $socket;
     }
 }
