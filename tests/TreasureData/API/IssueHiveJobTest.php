@@ -24,8 +24,8 @@ class TreasureData_API_IssueHiveJobTest extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceof('TreasureData_API_Result', $result);
         $message = $result->getResult();
-        /** @var TreasureData_API_Message_IssueHiveJob $message */
-        $this->assertInstanceof('TreasureData_API_Message_IssueHiveJob', $message);
+        /** @var TreasureData_API_Message_IssueJob $message */
+        $this->assertInstanceof('TreasureData_API_Message_IssueJob', $message);
 
         $this->assertEquals("www_access", $message->getDatabase());
         $this->assertEquals("hive", $message->getType());

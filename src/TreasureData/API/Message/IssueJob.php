@@ -18,14 +18,14 @@
  */
 
 /**
- * Class TreasureData_API_Message_IssueHiveJob
+ * Class TreasureData_API_Message_IssueJob
  *
  * @method string getJobId()
  * @method string getType()
  * @method string getDatabase()
  * @method string getUrl()
  */
-class TreasureData_API_Message_IssueHiveJob extends TreasureData_API_Message
+class TreasureData_API_Message_IssueJob extends TreasureData_API_Message
 {
     /** @var  string $job_id */
     protected $job_id;

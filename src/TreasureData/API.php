@@ -79,10 +79,31 @@ class TreasureData_API extends TreasureData_API_Core
             'query'    => $query,
             'priority' => $priority,
         ));
-        $result->setMessageType(TreasureData_API_Result::MESSAGE_TYPE_ISSUE_HIVE_JOB);
+        $result->setMessageType(TreasureData_API_Result::MESSAGE_TYPE_ISSUE_JOB);
 
         return $result;
     }
+
+    /**
+     * issues pig latin query
+     *
+     * @api
+     * @param $database
+     * @param $query
+     * @param $priority
+     * @see http://docs.treasure-data.com/articles/rest-api#post-v3jobissuehivedatabase
+     */
+    public function issuePigQuery($database_name, $query, $priority = self::PRIORITY_NORMAL)
+    {
+        $result = $this->post(sprintf('/job/issue/pig/%s', $database_name), array(
+            'query'    => $query,
+            'priority' => $priority,
+        ));
+
+        $result->setMessageType(TreasureData_API_Result::MESSAGE_TYPE_ISSUE_JOB);
+        return $result;
+    }
+
 
     /**
      * shows the status of a specific job. It is faster and more robust than the /v3/job/show/:job_id command.

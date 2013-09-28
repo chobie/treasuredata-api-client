@@ -10,7 +10,7 @@ $api = TreasureData_APIFactory::createClient(array(
 $message = $api->issueHiveQuery("testdb", "select v['code'] as code, count(1) as cnt from www_access group by v['code']", 0)
                 ->getResult();
 
-/* @var TreasureData_API_Message_IssueHiveJob $message */
+/* @var TreasureData_API_Message_IssueJob $message */
 
 printf("# Issuing job_id %s successful\n", $message->getJobId());
 printf("# polling job status. this will 30 over seconds...\n");

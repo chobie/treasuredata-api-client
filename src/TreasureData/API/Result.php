@@ -21,7 +21,7 @@ class TreasureData_API_Result
     const MESSAGE_TYPE_DATABASES      = 1;
     const MESSAGE_TYPE_TABLE_LIST     = 2;
     const MESSAGE_TYPE_SWAP_TABLE     = 3;
-    const MESSAGE_TYPE_ISSUE_HIVE_JOB = 4;
+    const MESSAGE_TYPE_ISSUE_JOB      = 4;
     const MESSAGE_TYPE_JOB_STATUS     = 5;
     const MESSAGE_TYPE_JOB_INFO       = 6;
     const MESSAGE_TYPE_KILL           = 7;
@@ -160,8 +160,8 @@ class TreasureData_API_Result
         case self::MESSAGE_TYPE_SWAP_TABLE:
             return new TreasureData_API_Message_SwapTable($array);
             break;
-        case self::MESSAGE_TYPE_ISSUE_HIVE_JOB:
-            return new TreasureData_API_Message_IssueHiveJob($array);
+        case self::MESSAGE_TYPE_ISSUE_JOB:
+            return new TreasureData_API_Message_IssueJob($array);
             break;
         case self::MESSAGE_TYPE_JOB_STATUS:
             return new TreasureData_API_Message_JobStatus($array);
