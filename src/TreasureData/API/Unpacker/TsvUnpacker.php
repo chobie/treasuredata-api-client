@@ -22,7 +22,7 @@ class TreasureData_API_Unpacker_TsvUnpacker
     public function unpack(TreasureData_API_Stream_InputStream $stream)
     {
         $result = array();
-        foreach (preg_split("/\r?\n/", $stream->getAll()) as $line) {
+        while ($line = $stream->readLine()) {
             $line = trim($line);
             if (empty($line)) {
                 continue;
