@@ -31,6 +31,7 @@ class TreasureData_API_Result
     const PACKER_TYPE_JSON = "json";
     const PACKER_TYPE_MSGPACK_GZ = "msgpack.gz";
 
+    /** @var TreasureData_API_Response $response */
     protected $response;
 
     protected $message_type;
@@ -90,9 +91,10 @@ class TreasureData_API_Result
             $this->processed = true;
 
             if ($this->isUsePacker()) {
-                $stream   = $this->getResponse()->getInputStream();
-                $unpacker = $this->getPackerForType($this->getPackerType());
+                /* currently, this block only for get result api call. */
 
+                $stream = $this->getStream($this->getResponse());
+                $unpacker = $this->getPackerForType($this->getPackerType());
                 if (is_callable($callback)) {
                     $unpacker->unpack2($stream, $callback);
                     $result = true;
@@ -100,6 +102,7 @@ class TreasureData_API_Result
                     $result = $unpacker->unpack($stream);
                 }
             } else {
+                /* most api results are very small. so we use getAll() here */
                 $message = $this->getResponse()->getInputStream()->getAll();
                 $array   = json_decode($message, true);
                 $result = $this->getMessageForType($this->getMessageType(), $array);
@@ -110,6 +113,39 @@ class TreasureData_API_Result
         }
 
         return $this->result;
+    }
+
+    protected function getStream(TreasureData_API_Response $response)
+    {
+        /* Unfortunately, PHP can't pass stream resource to gzopen.
+            so we write result to disk and reopen with gzopen */
+        if ($response->getRequest()->getGzipHint()) {
+            $stream   = $this->getResponse()->getInputStream();
+            $temp_file = tempnam(sys_get_temp_dir(), 'treasuredata-php-api-client');
+
+            $fp = fopen($temp_file, "w");
+            while ($buffer = $stream->read()) {
+                fwrite($fp, $buffer);
+            }
+            fclose($fp);
+
+            $stream = new TreasureData_API_Stream_GzipInputStream(gzopen($temp_file, "r"));
+            register_shutdown_function("TreasureData_API_Result::removeTempFile", $temp_file);
+        } else {
+            $stream   = $this->getResponse()->getInputStream();
+        }
+
+        return $stream;
+    }
+
+    public static function removeTempFile($path)
+    {
+        /* Note: workaround for removing temp file. what a suck gzopen. */
+        if (is_file($path)) {
+            if (strpos($path, sys_get_temp_dir()) !== false) {
+                unlink($path);
+            }
+        }
     }
 
     protected function getMessageForType($message_type, $array)

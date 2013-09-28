@@ -90,12 +90,7 @@ class TreasureData_API_Driver_StreamSocketDriver
             throw new TreasureData_API_Exception_HTTPException("API Server returns 404 not found");
         }
 
-        if ($request->getGzipHint()) {
-            $response = new TreasureData_API_Response($request, new TreasureData_API_Stream_GzipInputStream($this->socket), $headers);
-        } else {
-            $response = new TreasureData_API_Response($request, new TreasureData_API_Stream_InputStream($this->socket), $headers);
-        }
-
+        $response = new TreasureData_API_Response($request, new TreasureData_API_Stream_InputStream($this->socket), $headers);
         return $response;
     }
 

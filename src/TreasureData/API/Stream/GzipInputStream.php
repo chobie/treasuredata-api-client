@@ -19,25 +19,54 @@
 class TreasureData_API_Stream_GzipInputStream
     extends TreasureData_API_Stream_InputStream
 {
-    /**
-     * GzipInput stream provides inflating gzip stream feature (RFC 1952).
-     *
-     * We don't have `real` stream implementation yet. for now, use gzinflate.
-     *
-     * @param $datasource string or stream resource
-     */
+    /* Note: this is workaround. */
+
     public function __construct($datasource)
     {
+        $this->datasource = $datasource;
+    }
+
+    public function getAll()
+    {
         $buffer = "";
-        if (is_resource($datasource)) {
-            while (!feof($datasource)) {
-                $buffer .= fread($datasource, 8192);
+        $counter = 0;
+        $sum     = 0;
+        $total   = 0;
+
+        $last = microtime(true);
+        $bwlimit = $this->getBwlimit();
+        while (!gzeof($this->datasource)) {
+            $tmp = $this->read();
+            $bytes = strlen($tmp);
+
+            $buffer .= $tmp;
+            $sum   += $bytes;
+            $total += $bytes;
+            $counter++;
+
+            if ($bwlimit > 0 && $sum > $bwlimit) {
+                $current = microtime(true);
+                $wait    = $current - $last;
+                if ($wait < 1) {
+                    $wait = 1 - $wait;
+                    usleep($wait * 1000000);
+                }
+                $sum = 0;
+                $last = microtime(true);
             }
-        } else {
-            $buffer = $datasource;
         }
 
-        /** FIXME: gzdecode can't use under php 5.4. we use gzinflate atm */
-        parent::__construct(gzinflate(substr($buffer, 10, -8)));
+        return $buffer;
     }
+
+    public function read()
+    {
+        return gzread($this->datasource, 8192);
+    }
+
+    public function readLine()
+    {
+        return gzgets($this->datasource, 8192);
+    }
+
 }

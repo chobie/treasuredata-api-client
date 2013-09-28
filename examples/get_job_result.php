@@ -10,6 +10,6 @@ if (!isset($_SERVER['argv'][1])) {
 }
 
 $job_id = $_SERVER['argv'][1];
-$result = $api->getJobResult($job_id)->getResult();
+$result = $api->getJobResult($job_id, "msgpack.gz")->getResult();
 
 var_dump($result);

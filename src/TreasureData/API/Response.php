@@ -18,11 +18,16 @@
  */
 class TreasureData_API_Response
 {
+    /** @var TreasureData_API_Request $request*/
     protected $request;
+
+    /** @var TreasureData_API_Stream_InputStream $stream  */
     protected $stream;
+
     protected $headers = array();
 
-    public function __construct(TreasureData_API_Request $request, TreasureData_API_Stream_InputStream $stream, $headers = array())
+    public function __construct(TreasureData_API_Request $request,
+                                TreasureData_API_Stream_InputStream $stream, $headers = array())
     {
         $this->request = $request;
         $this->stream  = $stream;
