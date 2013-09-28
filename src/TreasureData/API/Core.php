@@ -139,7 +139,7 @@ abstract class TreasureData_API_Core
      * @param        $params
      * @return TreasureData_API_Result
      */
-    public function api($request_method = self::REQUEST_GET, $query, $params = array(), $gziped = false)
+    protected function api($request_method = self::REQUEST_GET, $query, $params = array(), $gziped = false)
     {
         $builder    = new TreasureData_API_RequestBuilder();
         $builder->setApiVersion($this->getApiVersion());
@@ -166,7 +166,7 @@ abstract class TreasureData_API_Core
      * @param array $params
      * @return TreasureData_API_Result
      */
-    public function get($endpoint, $params = array(), $gziped = false)
+    protected function get($endpoint, $params = array(), $gziped = false)
     {
         return $this->api(self::REQUEST_GET, $endpoint, $params, $gziped);
     }
@@ -176,7 +176,7 @@ abstract class TreasureData_API_Core
      * @param array $params
      * @return TreasureData_API_Result
      */
-    public function post($endpoint, $params = array(), $gziped = false)
+    protected function post($endpoint, $params = array(), $gziped = false)
     {
         return $this->api(self::REQUEST_POST, $endpoint, $params, $gziped);
     }
