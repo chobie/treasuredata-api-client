@@ -173,6 +173,14 @@ class TreasureData_API extends TreasureData_API_Core
 
         if ($format == self::FORMAT_MSGPACK_GZ) {
             $gziped = true;
+
+            if (!extension_loaded("zlib")) {
+                throw new RuntimeException("msgpack.gz requires zlib extension");
+            }
+
+            if (!extension_loaded("msgpack")) {
+                throw new RuntimeException("msgpack.gz requires msgpack extension");
+            }
         }
 
         $result = $this->get(sprintf('/job/result/%d', $job_id), array(
