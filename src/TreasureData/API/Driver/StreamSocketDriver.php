@@ -62,6 +62,7 @@ class TreasureData_API_Driver_StreamSocketDriver
                 'proxy'           => $request->getProxy(),
                 'content'         => $request->getContentBody(),
                 'request_fulluri' => $request->hasProxy(),
+                'ignore_errors'   => true,
             ),
         ));
 
@@ -84,6 +85,10 @@ class TreasureData_API_Driver_StreamSocketDriver
                     $headers[$key] = $value;
                 }
             }
+        }
+
+        if ($headers['HTTP_STATUS'][0] != 2) {
+            throw new TreasureData_API_Exception_HTTPException(sprintf("API Server returns %s code: %s", $headers['HTTP_STATUS'], fread($this->socket, 8192)));
         }
 
         $stream   = new TreasureData_API_Stream_InputStream($this->socket);
