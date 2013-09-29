@@ -21,6 +21,9 @@ class TreasureData_API_Stream_GzipInputStream
 {
     /* Note: this is workaround. */
 
+    /**
+     * @param $datasource gzopen'd file resource
+     */
     public function __construct($datasource)
     {
         $this->datasource = $datasource;
