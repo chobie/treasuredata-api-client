@@ -85,6 +85,11 @@ class TreasureData_API_Request
         return $this->params;
     }
 
+    /**
+     * get gzip hint
+     *
+     * @return bool
+     */
     public function getGzipHint()
     {
         return $this->gzip_hint;
@@ -120,6 +125,11 @@ class TreasureData_API_Request
         return $this->headers;
     }
 
+    /**
+     * get header as string
+     *
+     * @return string
+     */
     public function getHeadersAsString()
     {
         $buffer = array();
@@ -127,7 +137,7 @@ class TreasureData_API_Request
             $buffer[] = sprintf("%s: %s", $key, $value);
         }
 
-        return $buffer;
+        return join("\r\n", $buffer);
     }
 
     /**
@@ -232,11 +242,21 @@ class TreasureData_API_Request
         return $this->port;
     }
 
+    /**
+     * get proxy
+     *
+     * @return string
+     */
     public function getProxy()
     {
         return $this->proxy;
     }
 
+    /**
+     * check proxy
+     *
+     * @return bool
+     */
     public function hasProxy()
     {
         return !empty($this->proxy);

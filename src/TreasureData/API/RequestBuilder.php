@@ -18,94 +18,46 @@
  */
 class TreasureData_API_RequestBuilder
 {
+    /** @var string $request_method */
     protected $request_method = 'GET';
 
+    /** @var  string $endpoint */
     protected $endpoint;
 
+    /** @var  string $query */
     protected $query;
 
+    /** @var bool $gzip_hint */
     protected $gzip_hint = false;
 
+    /** @var array $params */
     protected $params = array();
 
+    /** @var string $version HTTP version */
     protected $version = '1.0';
 
+    /** @var  string $api_version */
     protected $api_version = TreasureData_API::DEFAULT_API_VERSION;
 
+    /** @var  TreasureData_API_Authentication $authentication */
     protected $authentication;
 
+    /** @var  string $user_agent */
     protected $user_agent;
 
+    /** @var  string $proxy */
     protected $proxy;
 
-    public function __construct()
-    {
-    }
-
-    public function getUserAgent()
-    {
-        return $this->user_agent;
-    }
-
-    public function setUserAgent($user_agent)
-    {
-        $this->user_agend = $user_agent;
-    }
-
-    public function setAuthentication(TreasureData_API_Authentication $authentication)
-    {
-        $this->authentication = $authentication;
-    }
-
-    public function getAuthentication()
-    {
-        return $this->authentication;
-    }
-
-    public function setApiVersion($api_version)
-    {
-        $this->api_version = trim($api_version, '/');
-    }
-
-    public function getQuery()
-    {
-        return $this->query;
-    }
-
-    public function setRequestMethod($method)
-    {
-        $this->request_method = $method;
-    }
-
-    public function setEndPoint($endpoint)
-    {
-        $this->endpoint = $endpoint;
-    }
-
-    public function getEndPoint()
-    {
-        return $this->endpoint;
-    }
-
-    public function setParams($params = array())
-    {
-        $this->params = $params;
-    }
-
-
-    public function setQuery($query)
-    {
-        $this->query = $query;
-    }
-
     /**
+     * build a validated request object
+     *
      * @return TreasureData_API_Request
      */
     public function build()
     {
         $result = array(
             "scheme" => "https",
-            "port" => 443,
+            "port"   => 443,
         );
         $result['request_method'] = $this->getRequestMethod();
 
@@ -159,12 +111,69 @@ class TreasureData_API_RequestBuilder
             $result['query_string'] = $query;
         }
 
-        $result['url'] = sprintf("%s://%s%s", $result['scheme'], $result['host'], $query);
+        $result['url']       = sprintf("%s://%s%s", $result['scheme'], $result['host'], $query);
         $result['gzip_hint'] = $this->getGzipHint();
-        $result['proxy'] = $this->getProxy();
+        $result['proxy']     = $this->getProxy();
+
+        /* TODO: Validate parameters here */
 
         $request = new TreasureData_API_Request($result);
         return $request;
+    }
+
+    public function getUserAgent()
+    {
+        return $this->user_agent;
+    }
+
+    public function setUserAgent($user_agent)
+    {
+        $this->user_agend = $user_agent;
+    }
+
+    public function setAuthentication(TreasureData_API_Authentication $authentication)
+    {
+        $this->authentication = $authentication;
+    }
+
+    public function getAuthentication()
+    {
+        return $this->authentication;
+    }
+
+    public function setApiVersion($api_version)
+    {
+        $this->api_version = trim($api_version, '/');
+    }
+
+    public function getQuery()
+    {
+        return $this->query;
+    }
+
+    public function setRequestMethod($method)
+    {
+        $this->request_method = $method;
+    }
+
+    public function setEndPoint($endpoint)
+    {
+        $this->endpoint = $endpoint;
+    }
+
+    public function getEndPoint()
+    {
+        return $this->endpoint;
+    }
+
+    public function setParams($params = array())
+    {
+        $this->params = $params;
+    }
+
+    public function setQuery($query)
+    {
+        $this->query = $query;
     }
 
     public function getApiVersion()
@@ -176,7 +185,6 @@ class TreasureData_API_RequestBuilder
     {
         return (bool)count($this->params);
     }
-
 
     public function getParams()
     {
