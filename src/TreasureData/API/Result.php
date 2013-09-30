@@ -201,3 +201,10 @@ class TreasureData_API_Result
         return $unpacker;
     }
 }
+
+/* NB: ubuntu karmic(9.10) can't use gzopen as itself's bug. */
+if (!function_exists("gzopen") && function_exists("gzopen64")) {
+    function gzopen($file, $mode) {
+        return gzopen64($file, $mode);
+    }
+}
