@@ -18,6 +18,10 @@
  */
 class TreasureData_API extends TreasureData_API_Core
 {
+    const QUERY_HIVE   = 0x01;
+    const QUERY_PIG    = 0x02;
+    const QUERY_IMPALA = 0x03;
+
     /**
      * returns a list of your databases.
      *
@@ -65,6 +69,31 @@ class TreasureData_API extends TreasureData_API_Core
     }
 
     /**
+     * issues query
+     *
+     * @param $database
+     * @param $query
+     * @param $priority
+     * @param $query_type
+     */
+    public function issueQuery($database_name, $query, $priority = self::PRIORITY_NORMAL, $query_type = self::QUERY_HIVE)
+    {
+        switch($query_type) {
+        case self::QUERY_HIVE;
+            return $this->issueHiveQuery($database_name, $query, $priority);
+        break;
+        case self::QUERY_PIG;
+            return $this->issuePigQuery($database_name, $query, $priority);
+            break;
+        case self::QUERY_IMPALA;
+            return $this->issueImpalaQuery($database_name, $query, $priority);
+            break;
+        default:
+            throw new RuntimeException(sprintf("query type %d does not support yet", $query_type));
+        }
+    }
+
+    /**
      * issues hive query
      *
      * @api
@@ -104,6 +133,24 @@ class TreasureData_API extends TreasureData_API_Core
         return $result;
     }
 
+
+    /**
+     * issues impala query
+     *
+     * @param $database
+     * @param $query
+     * @param $priority
+     */
+    public function issueImpalaQuery($database_name, $query, $priority = self::PRIORITY_NORMAL)
+    {
+        $result = $this->post(sprintf('/job/issue/impala/%s', $database_name), array(
+            'query'    => $query,
+            'priority' => $priority,
+        ));
+        $result->setMessageType(TreasureData_API_Result::MESSAGE_TYPE_ISSUE_JOB);
+
+        return $result;
+    }
 
     /**
      * shows the status of a specific job. It is faster and more robust than the /v3/job/show/:job_id command.
