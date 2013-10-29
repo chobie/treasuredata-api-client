@@ -95,7 +95,7 @@ class TreasureData_API_PreparedStatement
                 strlen($placeholder[0])
             );
 
-            $offset += (strlen($this->replace[$placeholder[0]]["value"]) - strlen($placeholder[0]));
+            $offset += (strlen($value) - strlen($placeholder[0]));
         }
 
         return $buffer;
