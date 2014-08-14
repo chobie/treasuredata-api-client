@@ -21,6 +21,7 @@ class TreasureData_API extends TreasureData_API_Core
     const QUERY_HIVE   = 0x01;
     const QUERY_PIG    = 0x02;
     const QUERY_IMPALA = 0x03;
+    const QUERY_PRESTO = 0x04;
 
     /**
      * returns a list of your databases.
@@ -88,6 +89,9 @@ class TreasureData_API extends TreasureData_API_Core
         case self::QUERY_IMPALA;
             return $this->issueImpalaQuery($database_name, $query, $priority);
             break;
+        case self::QUERY_PRESTO;
+            return $this->issuePrestoQuery($database_name, $query, $priority);
+            break;
         default:
             throw new RuntimeException(sprintf("query type %d does not support yet", $query_type));
         }
@@ -144,6 +148,24 @@ class TreasureData_API extends TreasureData_API_Core
     public function issueImpalaQuery($database_name, $query, $priority = self::PRIORITY_NORMAL)
     {
         $result = $this->post(sprintf('/job/issue/impala/%s', $database_name), array(
+            'query'    => $query,
+            'priority' => $priority,
+        ));
+        $result->setMessageType(TreasureData_API_Result::MESSAGE_TYPE_ISSUE_JOB);
+
+        return $result;
+    }
+
+    /**
+     * issues presto query
+     *
+     * @param $database
+     * @param $query
+     * @param $priority
+     */
+    public function issuePrestoQuery($database_name, $query, $priority = self::PRIORITY_NORMAL)
+    {
+        $result = $this->post(sprintf('/job/issue/presto/%s', $database_name), array(
             'query'    => $query,
             'priority' => $priority,
         ));
