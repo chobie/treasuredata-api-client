@@ -28,6 +28,9 @@ abstract class TreasureData_API_Message
                 $comment = $property->getDocComment();
 
                 if (preg_match("/array<(.+)?>/", $comment, $match)) {
+                    if (!is_array($values[$name])) {
+                        continue;
+                    }
                     $class_name = $match[1];
                     if ($class_name == "TreasureData_API_Message_TableSchema") {
                         $schema = json_decode($values[$name], true);
