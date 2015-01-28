@@ -28,16 +28,19 @@ abstract class TreasureData_API_Message
                 $comment = $property->getDocComment();
 
                 if (preg_match("/array<(.+)?>/", $comment, $match)) {
-                    if (!is_array($values[$name])) {
-                        continue;
-                    }
                     $class_name = $match[1];
                     if ($class_name == "TreasureData_API_Message_TableSchema") {
                         $schema = json_decode($values[$name], true);
+                        if (!is_array($schema)) {
+                            continue;
+                        }
                         foreach ($schema as $value) {
                             array_push($this->$name, new $class_name(array("name" => $value[0], "type" => $value[1])));
                         }
                     } else {
+                        if (!is_array($values[$name])) {
+                            continue;
+                        }
                         foreach ($values[$name] as $value) {
                             array_push($this->$name, new $class_name($value));
                         }
