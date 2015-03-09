@@ -19,6 +19,13 @@
 class TreasureData_API_Unpacker_CsvUnpacker
     implements TreasureData_API_Unpacker
 {
+    protected $information = array();
+
+    public function setColumnInformation($information)
+    {
+        $this->information = $information;
+    }
+
     public function unpack(TreasureData_API_Stream_InputStream $stream)
     {
         return $this->unpackImpl($stream);
@@ -41,8 +48,15 @@ class TreasureData_API_Unpacker_CsvUnpacker
 
             $args = explode(",", $line);
             $tmp = array();
-            foreach ($args as $arg) {
-                $tmp[] = trim($arg);
+
+            if (!empty($this->information)) {
+                foreach ($args as $offset => $value) {
+                    $tmp[$this->information[$offset]->get("name")] = $value;
+                }
+            } else {
+                foreach ($args as $arg) {
+                    $tmp[] = trim($arg);
+                }
             }
 
             if ($callable) {

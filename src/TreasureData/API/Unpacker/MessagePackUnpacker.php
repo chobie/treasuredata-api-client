@@ -19,6 +19,13 @@
 class TreasureData_API_Unpacker_MessagePackUnpacker
     implements TreasureData_API_Unpacker
 {
+    protected $information = array();
+
+    public function setColumnInformation($information)
+    {
+        $this->information = $information;
+    }
+
     public function unpack(TreasureData_API_Stream_InputStream $stream)
     {
         return $this->unpackImpl($stream);
@@ -58,10 +65,19 @@ class TreasureData_API_Unpacker_MessagePackUnpacker
             }
 
             if ($unpacker->execute($buffer, $offset)) {
+                $data = $unpacker->data();
+                if (!empty($this->information)) {
+                    $tmp = array();
+                    foreach ($data as $index => $value) {
+                        $tmp[$this->information[$index]->get("name")] = $value;
+                    }
+                    $data = $tmp;
+                }
+
                 if ($call) {
-                    call_user_func_array($callback, array($unpacker->data()));
+                    call_user_func_array($callback, array($data));
                 } else {
-                    $result[] = $unpacker->data();
+                    $result[] = $data;
                 }
 
                 $unpacker->reset();

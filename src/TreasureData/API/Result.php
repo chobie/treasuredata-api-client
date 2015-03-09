@@ -34,6 +34,9 @@ class TreasureData_API_Result
     /** @var TreasureData_API_Response $response */
     protected $response;
 
+    /** @var  TreasureData_API $api */
+    protected $api;
+
     protected $message_type;
 
     protected $packer_type;
@@ -42,12 +45,41 @@ class TreasureData_API_Result
 
     protected $processed = false;
 
+    protected $use_dictionary = false;
+
     protected $result;
+
+    protected $job_id;
 
 
     public function __construct(TreasureData_API_Response $response)
     {
         $this->response = $response;
+    }
+
+    public function setApi($api)
+    {
+        $this->api = $api;
+    }
+
+    public function setUseDictionary($flag)
+    {
+        $this->use_dictionary = $flag;
+    }
+
+    public function getUseDictionary()
+    {
+        return $this->use_dictionary;
+    }
+
+    public function setJobId($job_id)
+    {
+        $this->job_id = $job_id;
+    }
+
+    public function getJobId()
+    {
+        return $this->job_id;
     }
 
     public function setMessageType($type)
@@ -85,6 +117,11 @@ class TreasureData_API_Result
         return $this->use_packer;
     }
 
+    public function shouldUseDictionary() {
+        return true;
+    }
+
+
     public function getResult($callback = null)
     {
         if (!$this->processed) {
@@ -95,6 +132,12 @@ class TreasureData_API_Result
 
                 $stream = $this->getStream($this->getResponse());
                 $unpacker = $this->getPackerForType($this->getPackerType());
+
+                if ($this->getUseDictionary()) {
+                    $schema = $this->api->showJob($this->getJobId())->getResult()->get("hive_result_schema");
+                    $unpacker->setColumnInformation($schema);
+                }
+
                 if (is_callable($callback)) {
                     $unpacker->unpack2($stream, $callback);
                     $result = true;

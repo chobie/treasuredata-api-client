@@ -10,6 +10,7 @@ if (!isset($_SERVER['argv'][1])) {
 }
 
 $job_id = $_SERVER['argv'][1];
+$api->setUseDictionary(true); // returns column name as hash key when this option specified.
 $result = $api->getJobResult($job_id, "msgpack.gz")->getResult();
 
 var_dump($result);

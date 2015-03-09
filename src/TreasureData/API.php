@@ -23,6 +23,18 @@ class TreasureData_API extends TreasureData_API_Core
     const QUERY_IMPALA = 0x03;
     const QUERY_PRESTO = 0x04;
 
+    protected $use_dictionary = false;
+
+    public function setUseDictionary($flag)
+    {
+        $this->use_dictionary = $flag;
+    }
+
+    public function getUseDictionary()
+    {
+        return $this->use_dictionary;
+    }
+
     /**
      * returns a list of your databases.
      *
@@ -258,6 +270,12 @@ class TreasureData_API extends TreasureData_API_Core
 
         $result->setUsePacker(true);
         $result->setPackerType($format);
+        $result->setJobId($job_id);
+
+        if ($this->use_dictionary) {
+            $result->setApi($this);
+            $result->setUseDictionary(true);
+        }
 
         return $result;
     }

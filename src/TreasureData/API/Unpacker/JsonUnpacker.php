@@ -19,11 +19,27 @@
 class TreasureData_API_Unpacker_JsonUnpacker
     implements TreasureData_API_Unpacker
 {
+    protected $information = array();
+
+    public function setColumnInformation($information)
+    {
+        $this->information = $information;
+    }
+
     public function unpack(TreasureData_API_Stream_InputStream $stream)
     {
         $result = array();
         while ($buffer = $stream->readLine()) {
-            $result[] = json_decode($buffer, true);
+            if (!empty($this->information)) {
+                $tmp = array();
+                $args = json_decode($buffer, true);
+                foreach ($args as $offset => $value) {
+                    $tmp[$this->information[$offset]->get("name")] = $value;
+                }
+                $result[] = $tmp;
+            } else {
+                $result[] = json_decode($buffer, true);
+            }
         }
 
         return $result;
@@ -32,7 +48,15 @@ class TreasureData_API_Unpacker_JsonUnpacker
     public function unpack2(TreasureData_API_Stream_InputStream $stream, $callback)
     {
         while ($buffer = $stream->readLine()) {
-            $result = json_decode($buffer, true);
+            if (!empty($this->information)) {
+                $result = array();
+                $args = json_decode($buffer, true);
+                foreach ($args as $offset => $value) {
+                    $result[$this->information[$offset]->get("name")] = $value;
+                }
+            } else {
+                $result = json_decode($buffer, true);
+            }
             call_user_func_array($callback, array($result));
         }
     }
